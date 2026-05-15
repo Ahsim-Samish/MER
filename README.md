@@ -36,28 +36,53 @@ Flutter-приложение для ручного ввода данных фо�
 
 ### Требования
 
-* Flutter SDK ≥ 3.41 (Dart 3.11). Установка:
-  ```bash
-  git clone -b stable --depth 1 https://github.com/flutter/flutter.git ~/flutter
-  export PATH="$HOME/flutter/bin:$PATH"
-  ```
-* Для Linux desktop: `clang`, `cmake`, `ninja-build`, `pkg-config`,
+* **Flutter SDK ≥ 3.41** (Dart 3.11). Установка:
+  * Windows — скачать ZIP с https://docs.flutter.dev/get-started/install/windows,
+    распаковать в `C:\src\flutter`, добавить `C:\src\flutter\bin` в `PATH`.
+  * Linux/macOS:
+    ```bash
+    git clone -b stable --depth 1 https://github.com/flutter/flutter.git ~/flutter
+    export PATH="$HOME/flutter/bin:$PATH"
+    ```
+* **Windows desktop** — Visual Studio 2022 (или Build Tools) с компонентом
+  *Desktop development with C++* (включает MSVC, Windows 10/11 SDK, CMake).
+  Проверка: `flutter doctor`.
+* **Linux desktop** — `clang`, `cmake`, `ninja-build`, `pkg-config`,
   `libgtk-3-dev`, `lld`.
-* Для web: установленный Chrome.
+* **Web** — установленный Chrome.
 
 ### Сборка и запуск
 
 ```bash
 cd app
 flutter pub get
-# Подготовка SQLite worker для web (один раз):
-dart run sqflite_common_ffi_web:setup
+```
 
-# Desktop (Linux):
+**Windows (целевая платформа):**
+
+```powershell
+flutter config --enable-windows-desktop
+flutter run -d windows          # запуск из исходников
+flutter build windows --release # релизная сборка → build\windows\x64\runner\Release\mer_app.exe
+```
+
+**Linux desktop:**
+
+```bash
 flutter run -d linux
+flutter build linux --release
+```
 
-# Web (откроется в Chrome):
+**Web (превью в Chrome):**
+
+```bash
+# Однократно — генерация SQLite worker'а для браузера
+# (создаёт web/sqflite_sw.js и web/sqlite3.wasm; без него страница белая).
+dart run sqflite_common_ffi_web:setup
 flutter run -d chrome
+flutter build web --release
+# после build:
+cp web/sqflite_sw.js web/sqlite3.wasm build/web/
 ```
 
 ### Тесты и анализ
@@ -65,15 +90,6 @@ flutter run -d chrome
 ```bash
 flutter analyze
 flutter test
-```
-
-### Production-сборки
-
-```bash
-flutter build linux --release
-flutter build web --release
-# Для web также скопируйте sqflite_sw.js / sqlite3.wasm в build/web/:
-cp web/sqflite_sw.js web/sqlite3.wasm build/web/
 ```
 
 ## Учётные данные (демо)
