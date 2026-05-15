@@ -1,0 +1,11 @@
+# Workspace artefacts (не часть кода)
+_extracted/
+_docx_images/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Mac
+.DS_Store
